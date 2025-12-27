@@ -1,77 +1,88 @@
 package me.amgelo563.fabric.moblister.command;
 
 import me.amgelo563.fabric.moblister.registry.MobRegistry;
-import net.minecraft.server.command.ServerCommandSource;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.text.Text;
 
 import java.util.List;
 
-// Separated and with static executors to avoid adding state and business logic to the mixin, which is the only user of this class
-public class CommandExecutor {
-    private static final MobRegistry registry = new MobRegistry();
+import static net.minecraft.text.Text.literal;
 
-    public static void executeList(ServerCommandSource source) {
+public class CommandExecutor {
+    private final MobRegistry registry;
+
+    public CommandExecutor(MobRegistry reg) {
+        registry = reg;
+    }
+
+    public void executeUsage(FabricClientCommandSource source) {
+        source.sendFeedback(
+                literal("§cUsage: /moblister <list|duplicates>")
+        );
+    }
+
+    public void executeList(FabricClientCommandSource source) {
         List<MobRegistry.MobEntry> allMobs = registry.getAllMobs();
 
         source.sendFeedback(
-                () -> Text.literal("§6=== All Registered Mobs ===\n§f"), false);
+                Text.literal("§6=== All Registered Mobs ===\n§f"));
         source.sendFeedback(
-                () -> Text.literal("§7Total: §f" + allMobs.size()), false);
+                Text.literal("§7Total: §f" + allMobs.size()));
 
         for (int i = 0; i < allMobs.size(); i++) {
             MobRegistry.MobEntry entry = allMobs.get(i);
             int index = i + 1;
 
-            source.sendFeedback(() -> Text.literal(
+            source.sendFeedback(Text.literal(
                     String.format("§7[%d]§f %s §8(§7%s§8)",
                             index, entry.name(), entry.id())
-            ), false);
+            ));
         }
     }
 
-    public static void executeDuplicates(ServerCommandSource source) {
+    public void executeDuplicates(FabricClientCommandSource source) {
         MobRegistry.DuplicateResult duplicates = registry.getDuplicates();
 
         source.sendFeedback(
-                () -> Text.literal("§6=== Duplicate Analysis ===\n§f"), false);
+                Text.literal("§6=== Duplicate Analysis ===\n§f"));
 
         if (duplicates.isEmpty()) {
             source.sendFeedback(
-                    () -> Text.literal("§aNo duplicates found!"), false);
+                    Text.literal("§aNo duplicates found!"));
             return;
         }
 
         if (!duplicates.duplicateIds().isEmpty()) {
-            source.sendFeedback(() -> Text.literal(
+            source.sendFeedback(Text.literal(
                     "§cDuplicate IDs: " + duplicates.duplicateIds().size()
-            ), false);
+            ));
 
             duplicates.duplicateIds().values().forEach(list -> {
-                source.sendFeedback(() -> Text.literal(
+                source.sendFeedback(Text.literal(
                         "  §7ID: §f" + list.get(0).id()
-                ), false);
+                ));
 
                 list.forEach(e ->
-                        source.sendFeedback(() -> Text.literal(
+                        source.sendFeedback(Text.literal(
                                 "    §8- §f" + e.name()
-                        ), false));
+                        )));
             });
         }
 
         if (!duplicates.duplicateNames().isEmpty()) {
-            source.sendFeedback(() -> Text.literal(
+            source.sendFeedback(Text.literal(
                     "§cDuplicate Names: " + duplicates.duplicateNames().size()
-            ), false);
+            ));
 
             duplicates.duplicateNames().values().forEach(list -> {
-                source.sendFeedback(() -> Text.literal(
+                source.sendFeedback(Text.literal(
                         "  §7Name: §f" + list.get(0).name()
-                ), false);
+                ));
 
                 list.forEach(e ->
-                        source.sendFeedback(() -> Text.literal(
+                        source.sendFeedback(Text.literal(
                                 "    §8- §f" + e.id()
-                        ), false));
+                        )));
             });
         }
     }

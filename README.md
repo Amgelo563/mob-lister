@@ -9,7 +9,7 @@ I hacked this together as my first Fabric mod, so feel free to open issues if yo
 
 ## Usage
 
-1. Add the mod (doesn't have any dependency, including Fabric API). You can either compile it or download
+1. Add the mod (depends on Fabric API). You can either compile it or download
    through [the releases tab](https://github.com/Amgelo563/mob-lister/releases).
 2. Use the `/moblister list` command to list all registered mobs. The list may be big depending on the modpack, so you
    might need to check your logs if it's too long to fit in chat.
