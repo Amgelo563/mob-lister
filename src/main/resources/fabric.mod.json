@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "moblister",
+  "version": "${version}",
+  "name": "MobLister",
+  "description": "A mod to list all registered mobs and their IDs. Also lists duplicate IDs and names.",
+  "authors": [
+    "Amgelo563"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+  },
+  "mixins": [
+    "moblister.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "minecraft": "${minecraft_version}"
+  }
+}
